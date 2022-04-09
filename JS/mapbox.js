@@ -53,12 +53,24 @@ export async function getMap() {
             allMarkers.forEach((item) => {
                 item.classList.remove('marker_active');
             })
+
+            map.flyTo({
+                center: [
+                    station.geometry.coordinates[0],
+                    station.geometry.coordinates[1]
+                ],
+                essential: true,
+                zoom:16
+            });
             
             popUpMessage(
                 station.properties.station,
                 station.properties.address,
                 station.properties.availableBikes,
-                station.properties.availableDocks
+                station.properties.availableDocks,
+                station.geometry.coordinates[0],
+                station.geometry.coordinates[1],
+                map
             );
         markerEl.classList.add('marker_active');
         
@@ -70,7 +82,7 @@ export async function getMap() {
     });
 };
 
-function popUpMessage(station, address, bikes, docks) {
+function popUpMessage(station, address, bikes, docks, lat, lon, map) {
     const bikeContainerEl= document.querySelector('.bikeInfo');
     const allMarkers =document.querySelectorAll('.marker');
 
@@ -82,6 +94,13 @@ function popUpMessage(station, address, bikes, docks) {
                 item.classList.remove('marker_active')
             })
             bikeContainerEl.classList.add('hidden');
+            map.flyTo({
+                center:[
+                    lat, lon
+                ],
+                essential:true,
+                zoom:14
+            });
         })
 
     const stationTitle =
